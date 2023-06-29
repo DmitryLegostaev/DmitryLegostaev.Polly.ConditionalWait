@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="DmitryLegostaev.Polly.HandleFromList" Version="1.0.0" AllowedVersions="[1.0.0]" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" AllowedVersions="[2.14.1]" />
     <PackageReference Include="Polly" Version="8.0.0-alpha.4" AllowedVersions="[8.0.0-alpha.1]" />
     <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" AllowedVersions="[1.1.1]" />
   </ItemGroup>
