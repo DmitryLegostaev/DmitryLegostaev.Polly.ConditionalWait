@@ -1,4 +1,4 @@
-﻿namespace AutomationFramework.Utilities.Polly;
+﻿namespace DmitryLegostaev.Polly.ConditionalWait.Predicates;
 
 public static class PollyPredicates
 {
