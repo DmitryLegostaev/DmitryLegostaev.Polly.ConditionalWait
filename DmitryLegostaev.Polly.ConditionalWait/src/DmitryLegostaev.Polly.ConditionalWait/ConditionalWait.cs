@@ -10,12 +10,12 @@ public class ConditionalWait : IConditionalWait
     public ConditionalWait(TimeSpan? defaultTimeout = null, TimeSpan? defaultBackOffDelay = null)
     {
         var parseTimeoutResult =
-            TimeSpan.TryParse(Environment.GetEnvironmentVariable($"{nameof(ConditionalWait)}__{nameof(defaultTimeout)}"),
+            TimeSpan.TryParse(Environment.GetEnvironmentVariable($"{nameof(ConditionalWait)}__{nameof(this.defaultTimeout)}"),
                 out var defaultTimeoutEnv);
         this.defaultTimeout = defaultTimeout ?? (parseTimeoutResult ? defaultTimeoutEnv : TimeSpan.FromSeconds(30));
 
         var parseBackOffDelayResult =
-            TimeSpan.TryParse(Environment.GetEnvironmentVariable($"{nameof(ConditionalWait)}__{nameof(defaultTimeout)}"),
+            TimeSpan.TryParse(Environment.GetEnvironmentVariable($"{nameof(ConditionalWait)}__{nameof(this.defaultBackOffDelay)}"),
                 out var defaultBackOffDelayEnv);
         this.defaultBackOffDelay =
             defaultBackOffDelay ?? (parseBackOffDelayResult ? defaultBackOffDelayEnv : TimeSpan.FromMilliseconds(300));
