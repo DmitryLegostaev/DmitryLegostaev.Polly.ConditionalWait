@@ -8,21 +8,18 @@ public static class BackoffUtilities
 {
     public static IEnumerable<TimeSpan>? CalculateBackoff(IConditionalWaitConfiguration configuration)
     {
-        switch (configuration.BackoffType)
+        return configuration.BackoffType switch
         {
-            case WaitAndRetryBackoffType.Constant:
-                return Backoff.ConstantBackoff(configuration.BackOffDelay, int.MaxValue);
-            case WaitAndRetryBackoffType.Linear:
-                return Backoff.LinearBackoff(configuration.BackOffDelay, int.MaxValue, configuration.Factor);
-            case WaitAndRetryBackoffType.Exponential:
-                return Backoff.ExponentialBackoff(configuration.BackOffDelay, int.MaxValue, configuration.Factor);
-            case WaitAndRetryBackoffType.AwsDecorrelatedJitterBackoff:
-                return Backoff.DecorrelatedJitterBackoffV2(configuration.BackOffDelay, int.MaxValue);
-            case WaitAndRetryBackoffType.DecorrelatedJitterBackoffV2:
-                return Backoff.DecorrelatedJitterBackoffV2(configuration.BackOffDelay, int.MaxValue);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(configuration.BackoffType),
-                    $"{nameof(configuration.BackoffType)} is unsupported");
-        }
+            WaitAndRetryBackoffType.Constant => Backoff.ConstantBackoff(configuration.BackOffDelay, int.MaxValue),
+            WaitAndRetryBackoffType.Linear => Backoff.LinearBackoff(configuration.BackOffDelay, int.MaxValue, configuration.Factor),
+            WaitAndRetryBackoffType.Exponential => Backoff.ExponentialBackoff(configuration.BackOffDelay, int.MaxValue,
+                configuration.Factor),
+            WaitAndRetryBackoffType.AwsDecorrelatedJitterBackoff => Backoff.DecorrelatedJitterBackoffV2(configuration.BackOffDelay,
+                int.MaxValue),
+            WaitAndRetryBackoffType.DecorrelatedJitterBackoffV2 => Backoff.DecorrelatedJitterBackoffV2(configuration.BackOffDelay,
+                int.MaxValue),
+            _ => throw new ArgumentOutOfRangeException(nameof(configuration.BackoffType),
+                $"{nameof(configuration.BackoffType)} is unsupported")
+        };
     }
 }
