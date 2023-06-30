@@ -1,6 +1,6 @@
 ﻿using DmitryLegostaev.Polly.ConditionalWait.Configuration;
 
-namespace DmitryLegostaev.Polly.ConditionalWait.ConditionalWait;
+namespace DmitryLegostaev.Polly.ConditionalWait;
 
 public interface IConditionalWait
 {

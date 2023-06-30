@@ -2,7 +2,7 @@
 using DmitryLegostaev.Polly.ConditionalWait.Policies;
 using DmitryLegostaev.Polly.ConditionalWait.Predicates;
 
-namespace DmitryLegostaev.Polly.ConditionalWait.ConditionalWait;
+namespace DmitryLegostaev.Polly.ConditionalWait;
 
 public class ConditionalWait : IConditionalWait
 {
