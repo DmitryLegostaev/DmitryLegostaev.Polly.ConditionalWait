@@ -25,7 +25,7 @@ public static class PollyPolicies
                 BackoffUtilities.CalculateBackoff(waitConfiguration),
                 (_, _, arg3, _) =>
                 {
-                    logger?.LogDebug("Unexpected code execution result. Retry #{RetryAttempt} (Execution #{ExecutionAttempt}):", arg3, arg3 + 1);
+                    logger?.LogDebug("An unexpected code execution result occured. Retry #{RetryAttempt} (Execution #{ExecutionAttempt})", arg3, arg3 + 1);
                 });
 
         var timeoutPolicy = Policy
@@ -33,7 +33,12 @@ public static class PollyPolicies
 
         var timeoutRejectedFallbackPolicy = Policy<T>
             .Handle<TimeoutRejectedException>()
-            .Fallback(codeToExecute.Invoke);
+            .Fallback(() =>
+            {
+                var codeExecuteResult = codeToExecute.Invoke();
+                logger?.LogDebug("The last attempt to execute the code has been completed");
+                return codeExecuteResult;
+            });
 
         var timeoutExceededAndUnexpectedResultException =
             new TimeoutException(BuildExceptionMessage(waitConfiguration.Timeout, codePurpose, failReason));
