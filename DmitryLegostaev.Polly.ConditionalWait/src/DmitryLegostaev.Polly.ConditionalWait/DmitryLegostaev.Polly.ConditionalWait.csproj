@@ -7,7 +7,7 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <Title>$(AssemblyName)</Title>
     <Authors>Dmitry Legostaev</Authors>
-    <Description>A small class library to provide Conditional Wait functionality using Polly library.</Description>
+    <Description>A small class library to provide Conditional Wait functionality using Polly v7 library.</Description>
     <Copyright>Copyright (c) $(Authors)</Copyright>
     <Version>1.0.0</Version>
     <PackageProjectUrl>https://github.com/DmitryLegostaev/DmitryLegostaev.Polly.ConditionalWait</PackageProjectUrl>
