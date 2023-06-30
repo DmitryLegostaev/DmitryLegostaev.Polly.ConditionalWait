@@ -9,14 +9,12 @@ public class ConditionalWait : IConditionalWait
 {
     public ConditionalWait(TimeSpan? defaultTimeout = null, TimeSpan? defaultBackOffDelay = null)
     {
-        TimeSpan GetTimeSpanValue(TimeSpan? initialTimeSpanValue, string environmentVariableName, TimeSpan defaultTimeSpan)
-        {
-            return initialTimeSpanValue ??
-                   (TimeSpan.TryParse(Environment.GetEnvironmentVariable(environmentVariableName),
-                       out var parsedTimeSpanFromEnvironmentVariables)
-                       ? parsedTimeSpanFromEnvironmentVariables
-                       : defaultTimeSpan);
-        }
+        TimeSpan GetTimeSpanValue(TimeSpan? initialTimeSpanValue, string environmentVariableName, TimeSpan defaultTimeSpan) =>
+            initialTimeSpanValue ??
+            (TimeSpan.TryParse(Environment.GetEnvironmentVariable(environmentVariableName),
+                out var parsedTimeSpanFromEnvironmentVariables)
+                ? parsedTimeSpanFromEnvironmentVariables
+                : defaultTimeSpan);
 
         this.defaultTimeout = GetTimeSpanValue(defaultTimeout, DefaultTimeoutEnvironmentVariableName, TimeSpan.FromSeconds(30));
 
