@@ -9,20 +9,25 @@ public class ConditionalWait : IConditionalWait
 {
     public ConditionalWait(TimeSpan? defaultTimeout = null, TimeSpan? defaultBackOffDelay = null)
     {
-        var parseTimeoutResult =
-            TimeSpan.TryParse(Environment.GetEnvironmentVariable($"{nameof(ConditionalWait)}__{nameof(this.defaultTimeout)}"),
-                out var defaultTimeoutEnv);
-        this.defaultTimeout = defaultTimeout ?? (parseTimeoutResult ? defaultTimeoutEnv : TimeSpan.FromSeconds(30));
+        TimeSpan GetTimeSpanValue(TimeSpan? initialTimeSpanValue, string environmentVariableName, TimeSpan defaultTimeSpan)
+        {
+            return initialTimeSpanValue ??
+                   (TimeSpan.TryParse(Environment.GetEnvironmentVariable(environmentVariableName),
+                       out var parsedTimeSpanFromEnvironmentVariables)
+                       ? parsedTimeSpanFromEnvironmentVariables
+                       : defaultTimeSpan);
+        }
 
-        var parseBackOffDelayResult =
-            TimeSpan.TryParse(Environment.GetEnvironmentVariable($"{nameof(ConditionalWait)}__{nameof(this.defaultBackOffDelay)}"),
-                out var defaultBackOffDelayEnv);
+        this.defaultTimeout = GetTimeSpanValue(defaultTimeout, DefaultTimeoutEnvironmentVariableName, TimeSpan.FromSeconds(30));
+
         this.defaultBackOffDelay =
-            defaultBackOffDelay ?? (parseBackOffDelayResult ? defaultBackOffDelayEnv : TimeSpan.FromMilliseconds(300));
+            GetTimeSpanValue(defaultBackOffDelay, DefaultBackOffDelayEnvironmentVariableName, TimeSpan.FromMilliseconds(300));
     }
 
     private readonly TimeSpan defaultTimeout;
     private readonly TimeSpan defaultBackOffDelay;
+    private const string DefaultTimeoutEnvironmentVariableName = $"{nameof(ConditionalWait)}__{nameof(defaultTimeout)}";
+    private const string DefaultBackOffDelayEnvironmentVariableName = $"{nameof(ConditionalWait)}__{nameof(defaultBackOffDelay)}";
 
     public T WaitForPredicateAndGetResult<T>(Func<T> codeToExecute, Func<T, bool> conditionPredicate,
         TimeSpan? timeout = null, TimeSpan? backoffDelay = null,
@@ -30,7 +35,8 @@ public class ConditionalWait : IConditionalWait
     {
         var configuration = InitConditionalWaitConfiguration(timeout, backoffDelay);
 
-        return WaitForPredicateAndGetResult(codeToExecute, conditionPredicate, configuration, exceptionsToIgnore, failReason, codePurpose, logger);
+        return WaitForPredicateAndGetResult(codeToExecute, conditionPredicate, configuration, exceptionsToIgnore, failReason, codePurpose,
+            logger);
     }
 
     public T WaitForPredicateAndGetResult<T>(Func<T> codeToExecute, Func<T, bool> conditionPredicate,
@@ -38,7 +44,8 @@ public class ConditionalWait : IConditionalWait
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
         return PollyPolicies
-            .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose, logger)
+            .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose,
+                logger)
             .Execute(codeToExecute);
     }
 
@@ -58,7 +65,8 @@ public class ConditionalWait : IConditionalWait
         var conditionPredicate = PollyPredicates.IsNotNullPredicate<T>();
 
         return PollyPolicies
-            .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose, logger)
+            .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose,
+                logger)
             .Execute(codeToExecute);
     }
 
@@ -78,7 +86,8 @@ public class ConditionalWait : IConditionalWait
         var conditionPredicate = PollyPredicates.IsTruePredicate;
 
         PollyPolicies
-            .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose, logger)
+            .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose,
+                logger)
             .Execute(codeToExecute);
     }
 
