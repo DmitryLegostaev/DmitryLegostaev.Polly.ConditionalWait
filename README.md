@@ -11,7 +11,7 @@ var conditionalWait = new ConditionalWait();
 or use a DI to obtain ConditionalWait object.
 
 
-#### Configuration of default Timeout and BackOffDelay (optional)
+#### (optional) Configuration of default Timeout and BackOffDelay
 You can configure default timeout and backoffdelay for ConditionalWait object through its constructor. Defaults are 30s/300ms
 ```csharp
 var conditionalWait = new ConditionalWait(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(3));
