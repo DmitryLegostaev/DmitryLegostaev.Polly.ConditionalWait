@@ -1,9 +1,9 @@
 ﻿using DmitryLegostaev.Polly.ConditionalWait.Configuration;
+using DmitryLegostaev.Polly.ConditionalWait.Utilities;
 using DmitryLegostaev.Polly.HandleFromList.Extensions;
 using Humanizer;
+using Microsoft.Extensions.Logging;
 using Polly;
-using Polly.Contrib.WaitAndRetry;
-using Polly.Retry;
 using Polly.Timeout;
 
 namespace DmitryLegostaev.Polly.ConditionalWait.Policies;
@@ -12,9 +12,9 @@ public static class PollyPolicies
 {
     public static Policy<T> ConditionalWaitPolicy<T>(Func<T, bool> handleResultDelegate, Func<T> codeToExecute,
         IConditionalWaitConfiguration waitConfiguration, IList<Type>? exceptionsToIgnore = null, string? failReason = null,
-        string? codePurpose = null)
+        string? codePurpose = null, ILogger? logger = null)
     {
-        var negatedHandleResultDelegateForPolly = NegateFuncTBoolResult(handleResultDelegate);
+        var negatedHandleResultDelegateForPolly = PredicatesUtilities.NegateFuncTBoolResult(handleResultDelegate);
 
         var handleResultPolicyBuilder = Policy<T>
             .HandleResult(negatedHandleResultDelegateForPolly)
@@ -22,11 +22,10 @@ public static class PollyPolicies
 
         var waitAndRetryPolicy = handleResultPolicyBuilder
             .WaitAndRetry(
-                CalculateBackoff(waitConfiguration),
+                BackoffUtilities.CalculateBackoff(waitConfiguration),
                 (_, _, arg3, _) =>
                 {
-                    LogManager.GetCurrentClassLogger()
-                        .Debug($"Unexpected code execution result. Retry #{arg3} (Execution #{arg3 + 1}):");
+                    logger?.LogDebug("Unexpected code execution result. Retry #{RetryAttempt} (Execution #{ExecutionAttempt}):", arg3, arg3 + 1);
                 });
 
         var timeoutPolicy = Policy
@@ -36,35 +35,12 @@ public static class PollyPolicies
             .Handle<TimeoutRejectedException>()
             .Fallback(codeToExecute.Invoke);
 
-        var timeoutExceptionMessage = BuildExceptionMessage(waitConfiguration.Timeout, codePurpose, failReason);
-        var timeoutExceededAndUnexpectedResultException = new TimeoutException(timeoutExceptionMessage);
+        var timeoutExceededAndUnexpectedResultException =
+            new TimeoutException(BuildExceptionMessage(waitConfiguration.Timeout, codePurpose, failReason));
         var unexpectedResultFallbackPolicy = handleResultPolicyBuilder
             .Fallback(() => throw timeoutExceededAndUnexpectedResultException);
 
         return unexpectedResultFallbackPolicy.Wrap(timeoutRejectedFallbackPolicy.Wrap(timeoutPolicy.Wrap(waitAndRetryPolicy)));
-    }
-
-    private static IEnumerable<TimeSpan>? CalculateBackoff(IConditionalWaitConfiguration configuration)
-    {
-        // LogManager.GetCurrentClassLogger().Debug($"Executing {nameof(CalculateBackoff)} method. {configuration.Dump()}");
-        switch (configuration.BackoffType)
-        {
-            case RetryBackoffType.Constant:
-                return Backoff.ConstantBackoff(configuration.BackOffDelay, int.MaxValue);
-            case RetryBackoffType.Linear:
-                return Backoff.LinearBackoff(configuration.BackOffDelay, int.MaxValue, configuration.Factor);
-            case RetryBackoffType.Exponential:
-                return Backoff.ExponentialBackoff(configuration.BackOffDelay, int.MaxValue, configuration.Factor);
-            case RetryBackoffType.ExponentialWithJitter:
-                return Backoff.(configuration.BackOffDelay, int.MaxValue, configuration.Factor);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(configuration.BackoffType), $"{nameof(configuration.BackoffType)} is unsupported");
-        }
-    }
-
-    private static Func<T, bool> NegateFuncTBoolResult<T>(Func<T, bool> conditionPredicate)
-    {
-        return t => !conditionPredicate(t);
     }
 
     private static string BuildExceptionMessage(TimeSpan timeout, string? codePurpose = null, string? failReason = null)
