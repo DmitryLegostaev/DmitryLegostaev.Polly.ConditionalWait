@@ -1,3 +1,7 @@
+[![Nuget](https://img.shields.io/nuget/v/DmitryLegostaev.Polly.ConditionalWait.svg)](https://www.nuget.org/packages/DmitryLegostaev.Polly.ConditionalWait)
+[![Build](https://github.com/DmitryLegostaev/DmitryLegostaev.Polly.ConditionalWait/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/DmitryLegostaev/DmitryLegostaev.Polly.ConditionalWait/actions/workflows/build.yml)
+![GitHub repo size](https://img.shields.io/github/repo-size/DmitryLegostaev/DmitryLegostaev.Polly.ConditionalWait)
+
 ## DmitryLegostaev.Polly.ConditionalWait
 
 A small class library to provide Conditional Wait functionality using Polly v7 library.
