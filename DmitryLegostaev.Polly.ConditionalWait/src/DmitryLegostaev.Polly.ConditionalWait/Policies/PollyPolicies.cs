@@ -25,8 +25,8 @@ public static class PollyPolicies
                 BackoffUtilities.CalculateBackoff(waitConfiguration),
                 (_, _, arg3, _) =>
                 {
-                    logger?.LogDebug("An unexpected code execution result occured. Retry #{RetryAttempt} (Execution #{ExecutionAttempt})",
-                        arg3, arg3 + 1);
+                    logger?.LogDebug("An unexpected code execution result occured. Retry #{RetryAttempt} (Execution #{ExecutionAttempt}): {CodePurpose}",
+                        arg3, arg3 + 1, codePurpose);
                 });
 
         var timeoutPolicy = Policy
