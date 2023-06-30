@@ -28,7 +28,7 @@ public class ConditionalWait : IConditionalWait
         TimeSpan? timeout = null, TimeSpan? backoffDelay = null,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
-        var configuration = InitConditionalWaitConfigurationModel(timeout, backoffDelay);
+        var configuration = InitConditionalWaitConfiguration(timeout, backoffDelay);
 
         return WaitForPredicateAndGetResult(codeToExecute, conditionPredicate, configuration, exceptionsToIgnore, failReason, codePurpose, logger);
     }
@@ -46,7 +46,7 @@ public class ConditionalWait : IConditionalWait
         TimeSpan? timeout = null, TimeSpan? backoffDelay = null,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
-        var configuration = InitConditionalWaitConfigurationModel(timeout, backoffDelay);
+        var configuration = InitConditionalWaitConfiguration(timeout, backoffDelay);
 
         return WaitForAndGetResult(codeToExecute, configuration, exceptionsToIgnore, failReason, codePurpose, logger);
     }
@@ -66,7 +66,7 @@ public class ConditionalWait : IConditionalWait
         TimeSpan? timeout = null, TimeSpan? backoffDelay = null,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
-        var configuration = InitConditionalWaitConfigurationModel(timeout, backoffDelay);
+        var configuration = InitConditionalWaitConfiguration(timeout, backoffDelay);
 
         WaitForTrue(codeToExecute, configuration, exceptionsToIgnore, failReason, codePurpose, logger);
     }
@@ -82,7 +82,7 @@ public class ConditionalWait : IConditionalWait
             .Execute(codeToExecute);
     }
 
-    private IConditionalWaitConfiguration InitConditionalWaitConfigurationModel(TimeSpan? timeout = null,
+    private IConditionalWaitConfiguration InitConditionalWaitConfiguration(TimeSpan? timeout = null,
         TimeSpan? backoffDelay = null)
     {
         return new ConditionalWaitConfiguration(timeout ?? defaultTimeout, backoffDelay ?? defaultBackOffDelay);
