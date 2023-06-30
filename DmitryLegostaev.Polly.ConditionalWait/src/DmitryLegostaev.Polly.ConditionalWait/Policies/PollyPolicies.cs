@@ -11,8 +11,8 @@ namespace DmitryLegostaev.Polly.ConditionalWait.Policies;
 public static class PollyPolicies
 {
     public static Policy<T> ConditionalWaitPolicy<T>(Func<T, bool> handleResultDelegate, Func<T> codeToExecute,
-        IConditionalWaitConfiguration waitConfiguration, IList<Type>? exceptionsToIgnore = null, string? failReason = null,
-        string? codePurpose = null, ILogger? logger = null)
+        IConditionalWaitConfiguration waitConfiguration,
+        IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
         var negatedHandleResultDelegateForPolly = PredicatesUtilities.NegateFuncTBoolResult(handleResultDelegate);
 
@@ -25,7 +25,8 @@ public static class PollyPolicies
                 BackoffUtilities.CalculateBackoff(waitConfiguration),
                 (_, _, arg3, _) =>
                 {
-                    logger?.LogDebug("An unexpected code execution result occured. Retry #{RetryAttempt} (Execution #{ExecutionAttempt})", arg3, arg3 + 1);
+                    logger?.LogDebug("An unexpected code execution result occured. Retry #{RetryAttempt} (Execution #{ExecutionAttempt})",
+                        arg3, arg3 + 1);
                 });
 
         var timeoutPolicy = Policy

@@ -21,7 +21,8 @@ public static class BackoffUtilities
             case WaitAndRetryBackoffType.DecorrelatedJitterBackoffV2:
                 return Backoff.DecorrelatedJitterBackoffV2(configuration.BackOffDelay, int.MaxValue);
             default:
-                throw new ArgumentOutOfRangeException(nameof(configuration.BackoffType), $"{nameof(configuration.BackoffType)} is unsupported");
+                throw new ArgumentOutOfRangeException(nameof(configuration.BackoffType),
+                    $"{nameof(configuration.BackoffType)} is unsupported");
         }
     }
 }
