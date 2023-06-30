@@ -24,20 +24,20 @@ Environment.SetEnvironmentVariable("ConditionalWait__defaultBackOffDelay", TimeS
 Configuration priority is: Constructor parameters -> Environment variables -> Pre-defined defaults (30s/300ms)
 
 #### Actual usage
-Each method require Func to execute within it's body. WaitForPredicateAndGetResult requires a predicate to be passed as argument in addition to Func.
+Each method require Func to execute within its body. WaitForPredicateAndGetResult requires a predicate to be passed as argument in addition to Func.
 ```csharp
 // Wait for true to be returned from Func execution.
 conditionalWait.WaitForTrue(() => 2 + 2 == 4);
 
-// Wait for not null object to be returned from Func execution. Returning Func execution result to the calling method.
+// Wait for not null object to be returned from Func execution. Returns Func execution result to the calling method.
 var equationResult = conditionalWait.WaitForAndGetResult(() => 2 + 2);
 
-// Executing Func, obtaining its result, passing the result to the predicate, waiting for true to be returned from predicate. Returning Func execution result to the calling method.
+// Executing Func, obtaining its result, passing the result to the predicate, waiting for true to be returned from predicate. Returns Func execution result to the calling method.
 var equationResult = conditionalWait.WaitForPredicateAndGetResult(() => 2 + 2, eq => eq == 4);
 ```
 
 Each method could consume IConditionalWaitConfiguration object or Timeout/BackOffDelay. 
-If 2nd option is chosen but Timeout or BackOffDelay is missing, then it will be obtained from ConditionalWait defaults defined during it's instantiation.
+If 2nd option is chosen but Timeout or BackOffDelay is missing, then it will be obtained from ConditionalWait defaults defined during ConditionalWait object instantiation.
 ```csharp
 conditionalWait.WaitForTrue(() => 2 + 2 == 4,
     new ConditionalWaitConfiguration(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(3)));
@@ -62,10 +62,10 @@ Also ConditionalWait methods consume some optional arguments:
 | logger             | ILogger       | Microsoft.Extensions.Logging object to add debug outputs during ConditionalWait execution                |
 
 #### ConditionalWaitConfiguration
-To create ConditionalWaitConfiguration object you should pass TimeSpan Timeout and TimeSpan BackOffDelay
-However you can also set Factor and BackoffType to customize WaitAndRetry behaviour.
+To create ConditionalWaitConfiguration object you should pass TimeSpan Timeout and TimeSpan BackOffDelay to its constructor.
+Also you can set Factor and BackoffType to customize main ConditionalWait behaviour based on WaitAndRetry policy.
 
-ConditionalWaitConfiguration could be mapped from Configuration by Microsoft.Extensions.Configuration.ConfigurationBinder.
+ConditionalWaitConfiguration could be mapped from .NET Configuration by Microsoft.Extensions.Configuration.ConfigurationBinder.
 
 To understand more about ConditionalWaitConfiguration capabilities visit https://github.com/Polly-Contrib/Polly.Contrib.WaitAndRetry
 
