@@ -7,7 +7,7 @@ namespace DmitryLegostaev.Polly.ConditionalWait;
 
 public class ConditionalWait : IConditionalWait
 {
-    public ConditionalWait(TimeSpan? defaultTimeout = null, TimeSpan? defaultBackOffDelay = null)
+    public ConditionalWait(TimeSpan? defaultTimeout = null, TimeSpan? defaultBackOffDelay = null, ILogger? logger = null)
     {
         TimeSpan GetTimeSpanValue(TimeSpan? initialTimeSpanValue, string environmentVariableName, TimeSpan defaultTimeSpan) =>
             initialTimeSpanValue ??
@@ -20,12 +20,15 @@ public class ConditionalWait : IConditionalWait
 
         this.defaultBackOffDelay =
             GetTimeSpanValue(defaultBackOffDelay, DefaultBackOffDelayEnvironmentVariableName, TimeSpan.FromMilliseconds(300));
+
+        this.logger = logger;
     }
 
-    private readonly TimeSpan defaultTimeout;
-    private readonly TimeSpan defaultBackOffDelay;
     private const string DefaultTimeoutEnvironmentVariableName = $"{nameof(ConditionalWait)}__{nameof(defaultTimeout)}";
     private const string DefaultBackOffDelayEnvironmentVariableName = $"{nameof(ConditionalWait)}__{nameof(defaultBackOffDelay)}";
+    private readonly TimeSpan defaultTimeout;
+    private readonly TimeSpan defaultBackOffDelay;
+    private readonly ILogger? logger;
 
     public T WaitForPredicateAndGetResult<T>(Func<T> codeToExecute, Func<T, bool> conditionPredicate,
         TimeSpan? timeout = null, TimeSpan? backoffDelay = null,
@@ -43,7 +46,7 @@ public class ConditionalWait : IConditionalWait
     {
         return PollyPolicies
             .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose,
-                logger)
+                logger ?? this.logger)
             .Execute(codeToExecute);
     }
 
@@ -64,7 +67,7 @@ public class ConditionalWait : IConditionalWait
 
         return PollyPolicies
             .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose,
-                logger)
+                logger ?? this.logger)
             .Execute(codeToExecute);
     }
 
@@ -85,7 +88,7 @@ public class ConditionalWait : IConditionalWait
 
         PollyPolicies
             .ConditionalWaitPolicy(conditionPredicate, codeToExecute, waitConfiguration, exceptionsToIgnore, failReason, codePurpose,
-                logger)
+                logger ?? this.logger)
             .Execute(codeToExecute);
     }
 
