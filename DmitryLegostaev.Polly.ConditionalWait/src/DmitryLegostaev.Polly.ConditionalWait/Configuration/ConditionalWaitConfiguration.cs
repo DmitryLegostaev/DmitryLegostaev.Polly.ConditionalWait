@@ -15,7 +15,7 @@ public class ConditionalWaitConfiguration : IWaitConfiguration
         if (BackoffType is not null) this.BackoffType = (WaitAndRetryBackoffType) BackoffType;
     }
 
-    public int RetryCount { get; }
+    public int RetryCount { get; set; }
     public TimeSpan Timeout { get; set; }
     public TimeSpan BackOffDelay { get; set; }
     public double Factor { get; set; }
