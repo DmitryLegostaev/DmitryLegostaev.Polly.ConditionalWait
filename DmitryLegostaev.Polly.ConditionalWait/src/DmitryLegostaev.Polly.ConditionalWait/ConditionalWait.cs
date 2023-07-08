@@ -41,7 +41,7 @@ public class ConditionalWait : IConditionalWait
     }
 
     public T WaitForPredicateAndGetResult<T>(Func<T> codeToExecute, Func<T, bool> conditionPredicate,
-        IConditionalWaitConfiguration waitConfiguration,
+        IWaitConfiguration waitConfiguration,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
         return PollyPolicies
@@ -60,7 +60,7 @@ public class ConditionalWait : IConditionalWait
     }
 
     public T WaitForAndGetResult<T>(Func<T> codeToExecute,
-        IConditionalWaitConfiguration waitConfiguration,
+        IWaitConfiguration waitConfiguration,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
         var conditionPredicate = PollyPredicates.IsNotNullPredicate<T>();
@@ -81,7 +81,7 @@ public class ConditionalWait : IConditionalWait
     }
 
     public void WaitForTrue(Func<bool> codeToExecute,
-        IConditionalWaitConfiguration waitConfiguration,
+        IWaitConfiguration waitConfiguration,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
         var conditionPredicate = PollyPredicates.IsTruePredicate;
@@ -92,7 +92,7 @@ public class ConditionalWait : IConditionalWait
             .Execute(codeToExecute);
     }
 
-    private IConditionalWaitConfiguration InitConditionalWaitConfiguration(TimeSpan? timeout = null,
+    private IWaitConfiguration InitConditionalWaitConfiguration(TimeSpan? timeout = null,
         TimeSpan? backoffDelay = null)
     {
         return new ConditionalWaitConfiguration(timeout ?? defaultTimeout, backoffDelay ?? defaultBackOffDelay);

@@ -2,8 +2,9 @@
 
 namespace DmitryLegostaev.Polly.ConditionalWait.Configuration;
 
-public interface IConditionalWaitConfiguration
+public interface IWaitConfiguration
 {
+    public int RetryCount { get; }
     public TimeSpan Timeout { get; }
     public TimeSpan BackOffDelay { get; }
     public double Factor { get; }

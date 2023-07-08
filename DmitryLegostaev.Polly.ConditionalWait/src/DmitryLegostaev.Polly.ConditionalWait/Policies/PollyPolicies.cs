@@ -11,7 +11,7 @@ namespace DmitryLegostaev.Polly.ConditionalWait.Policies;
 public static class PollyPolicies
 {
     public static Policy<T> ConditionalWaitPolicy<T>(Func<T, bool> handleResultDelegate, Func<T> codeToExecute,
-        IConditionalWaitConfiguration waitConfiguration,
+        IWaitConfiguration waitConfiguration,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null)
     {
         var negatedHandleResultDelegateForPolly = PredicatesUtilities.NegateFuncTBoolResult(handleResultDelegate);

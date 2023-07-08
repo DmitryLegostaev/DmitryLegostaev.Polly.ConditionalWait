@@ -6,7 +6,7 @@ namespace DmitryLegostaev.Polly.ConditionalWait.Utilities;
 
 public static class BackoffUtilities
 {
-    public static IEnumerable<TimeSpan>? CalculateBackoff(IConditionalWaitConfiguration configuration)
+    public static IEnumerable<TimeSpan>? CalculateBackoff(IWaitConfiguration configuration)
     {
         return configuration.BackoffType switch
         {
