@@ -42,27 +42,11 @@ public static class PollyPolicies
             });
 
         var timeoutExceededAndUnexpectedResultException =
-            new TimeoutException(BuildExceptionMessage(waitConfiguration.Timeout, codePurpose, failReason));
+            new TimeoutException(
+                $"ConditionalWait timed out after {waitConfiguration.Timeout.Humanize()}. Fail reason: {failReason ?? "Not Specified"}. Executed code purpose: {codePurpose ?? "NotSpecified"}");
         var unexpectedResultFallbackPolicy = handleResultPolicyBuilder
             .Fallback(() => throw timeoutExceededAndUnexpectedResultException);
 
         return unexpectedResultFallbackPolicy.Wrap(timeoutRejectedFallbackPolicy.Wrap(timeoutPolicy.Wrap(waitAndRetryPolicy)));
-    }
-
-    private static string BuildExceptionMessage(TimeSpan timeout, string? codePurpose = null, string? failReason = null)
-    {
-        var timeoutExceptionMessage = $"ConditionalWait timed out after {timeout.Humanize()}.";
-
-        if (failReason is not null)
-        {
-            timeoutExceptionMessage += $" Fail reason: {failReason}.";
-        }
-
-        if (codePurpose is not null)
-        {
-            timeoutExceptionMessage += $" Executed code purpose: {codePurpose}.";
-        }
-
-        return timeoutExceptionMessage;
     }
 }
