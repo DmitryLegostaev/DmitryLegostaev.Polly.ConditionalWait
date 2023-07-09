@@ -23,10 +23,10 @@ public static class PollyPolicies
         var waitAndRetryPolicy = handleResultPolicyBuilder
             .WaitAndRetry(
                 BackoffUtilities.CalculateBackoff(waitConfiguration),
-                (_, _, arg3, _) =>
+                (result, span, i, arg4) =>
                 {
                     logger?.LogDebug("An unexpected code execution result occured. Retry #{RetryAttempt} (Execution #{ExecutionAttempt}): {CodePurpose}",
-                        arg3, arg3 + 1, codePurpose);
+                        i, i + 1, codePurpose);
                 });
 
         var timeoutPolicy = Policy
