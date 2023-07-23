@@ -10,7 +10,7 @@ public interface IConditionalWait
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null);
 
     public T WaitForPredicateAndGetResult<T>(Func<T> codeToExecute, Func<T, bool> conditionPredicate,
-        IConditionalWaitConfiguration waitConfiguration, 
+        IWaitConfiguration waitConfiguration, 
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null);
 
     public T WaitForAndGetResult<T>(Func<T> codeToExecute, 
@@ -18,7 +18,7 @@ public interface IConditionalWait
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null);
 
     public T WaitForAndGetResult<T>(Func<T> codeToExecute, 
-        IConditionalWaitConfiguration waitConfiguration,
+        IWaitConfiguration waitConfiguration,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null);
 
     public void WaitForTrue(Func<bool> codeToExecute, 
@@ -26,6 +26,6 @@ public interface IConditionalWait
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null);
 
     public void WaitForTrue(Func<bool> codeToExecute, 
-        IConditionalWaitConfiguration waitConfiguration,
+        IWaitConfiguration waitConfiguration,
         IList<Type>? exceptionsToIgnore = null, string? failReason = null, string? codePurpose = null, ILogger? logger = null);
 }

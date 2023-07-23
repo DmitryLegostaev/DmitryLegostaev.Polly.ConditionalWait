@@ -9,16 +9,17 @@
     <Authors>Dmitry Legostaev</Authors>
     <Description>A small class library to provide Conditional Wait functionality using Polly v7 library.</Description>
     <Copyright>Copyright (c) $(Authors)</Copyright>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <PackageProjectUrl>https://github.com/DmitryLegostaev/DmitryLegostaev.Polly.ConditionalWait</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DmitryLegostaev/DmitryLegostaev.Polly.ConditionalWait</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>package-icon.png</PackageIcon>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageTags>Polly, Conditional, Wait, WaitAndRetry, Retry, Handling</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RootNamespace>DmitryLegostaev.Polly.ConditionalWait</RootNamespace>
+    <Configuration>Release</Configuration>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DmitryLegostaev.Polly.HandleFromList" Version="1.0.0" AllowedVersions="[1.0.0]" />
+    <PackageReference Include="DmitryLegostaev.Polly.HandleFromList" Version="2.0.0" AllowedVersions="[2.0.0]" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" AllowedVersions="[2.14.1]" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" AllowedVersions="[7.0.1]" />
     <PackageReference Include="Polly" Version="7.2.4" AllowedVersions="[7.2.4]" />
