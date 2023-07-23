@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Use custom GitHub action
-        uses: DmitryLegostaev/nuget-gallery-push-test@main
+        uses: DmitryLegostaev/DmitryLegostaev.GitHubActions.PushNupkgToNuget@main
         with:
           PROJECT_NAME: ${{ matrix.project }}
           NUGET_API_KEY: ${{ secrets.NUGET_GALLERY_SECRET }}
