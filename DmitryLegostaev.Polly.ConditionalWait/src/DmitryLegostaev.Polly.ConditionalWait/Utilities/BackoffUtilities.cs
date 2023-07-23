@@ -10,14 +10,14 @@ public static class BackoffUtilities
     {
         return configuration.BackoffType switch
         {
-            WaitAndRetryBackoffType.Constant => Backoff.ConstantBackoff(configuration.BackOffDelay, int.MaxValue),
-            WaitAndRetryBackoffType.Linear => Backoff.LinearBackoff(configuration.BackOffDelay, int.MaxValue, configuration.Factor),
-            WaitAndRetryBackoffType.Exponential => Backoff.ExponentialBackoff(configuration.BackOffDelay, int.MaxValue,
+            WaitAndRetryBackoffType.Constant => Backoff.ConstantBackoff(configuration.BackOffDelay, configuration.RetryCount),
+            WaitAndRetryBackoffType.Linear => Backoff.LinearBackoff(configuration.BackOffDelay, configuration.RetryCount, configuration.Factor),
+            WaitAndRetryBackoffType.Exponential => Backoff.ExponentialBackoff(configuration.BackOffDelay, configuration.RetryCount,
                 configuration.Factor),
             WaitAndRetryBackoffType.AwsDecorrelatedJitterBackoff => Backoff.DecorrelatedJitterBackoffV2(configuration.BackOffDelay,
-                int.MaxValue),
+                configuration.RetryCount),
             WaitAndRetryBackoffType.DecorrelatedJitterBackoffV2 => Backoff.DecorrelatedJitterBackoffV2(configuration.BackOffDelay,
-                int.MaxValue),
+                configuration.RetryCount),
             _ => throw new ArgumentOutOfRangeException(nameof(configuration.BackoffType),
                 $"{nameof(configuration.BackoffType)} is unsupported")
         };
